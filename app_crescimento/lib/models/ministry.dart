@@ -12,4 +12,14 @@ class Ministry {
     required this.pastoral,
     required this.teaching,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'apostolic': apostolic,
+      'prophetic': prophetic,
+      'evangelistic': evangelistic,
+      'pastoral': pastoral,
+      'teaching': teaching,
+    };
+  }
 }

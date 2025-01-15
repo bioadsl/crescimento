@@ -1,6 +1,11 @@
 # This is a generated file; do not edit or check into version control.
-path_provider=C:\\Users\\Del\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\path_provider-2.1.5\\
-path_provider_android=C:\\Users\\Del\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\path_provider_android-2.2.15\\
-path_provider_foundation=C:\\Users\\Del\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\path_provider_foundation-2.4.1\\
-path_provider_linux=C:\\Users\\Del\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\path_provider_linux-2.2.1\\
-path_provider_windows=C:\\Users\\Del\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\path_provider_windows-2.3.0\\
+flutter_inappwebview=C:\\Users\\Fabricio\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\flutter_inappwebview-5.8.0\\
+flutter_webview_plugin=C:\\Users\\Fabricio\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\flutter_webview_plugin-0.4.0\\
+path_provider=C:\\Users\\Fabricio\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\path_provider-2.1.5\\
+path_provider_android=C:\\Users\\Fabricio\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\path_provider_android-2.2.15\\
+path_provider_foundation=C:\\Users\\Fabricio\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\path_provider_foundation-2.4.1\\
+path_provider_linux=C:\\Users\\Fabricio\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\path_provider_linux-2.2.1\\
+path_provider_windows=C:\\Users\\Fabricio\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\path_provider_windows-2.3.0\\
+webview_flutter=C:\\Users\\Fabricio\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\webview_flutter-2.8.0\\
+webview_flutter_android=C:\\Users\\Fabricio\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\webview_flutter_android-2.10.4\\
+webview_flutter_wkwebview=C:\\Users\\Fabricio\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\webview_flutter_wkwebview-2.9.5\\

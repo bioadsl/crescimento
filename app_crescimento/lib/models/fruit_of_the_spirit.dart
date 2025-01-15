@@ -10,4 +10,13 @@ class FruitOfTheSpirit {
     required this.peace,
     required this.patience,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'love': love,
+      'joy': joy,
+      'peace': peace,
+      'patience': patience,
+    };
+  }
 }
