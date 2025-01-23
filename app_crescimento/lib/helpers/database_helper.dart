@@ -38,6 +38,7 @@ class DatabaseHelper {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     ''');
+
     await conn.query('''
       CREATE TABLE IF NOT EXISTS fruit_of_the_spirit_results (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,6 +55,7 @@ class DatabaseHelper {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     ''');
+
     await conn.query('''
       CREATE TABLE IF NOT EXISTS intimacy_level_results (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,6 +72,7 @@ class DatabaseHelper {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     ''');
+
     await conn.query('''
       CREATE TABLE IF NOT EXISTS spiritual_gifts_results (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -86,6 +89,7 @@ class DatabaseHelper {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     ''');
+
     await conn.query('''
       CREATE TABLE IF NOT EXISTS spiritual_disciplines_results (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -99,6 +103,18 @@ class DatabaseHelper {
         service INT NOT NULL,
         silence INT NOT NULL,
         generosity INT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    ''');
+
+    await conn.query('''
+      CREATE TABLE IF NOT EXISTS pillars_results (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        missions INT NOT NULL,
+        teaching INT NOT NULL,
+        discipleship INT NOT NULL,
+        worship INT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     ''');
@@ -222,6 +238,26 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getSpiritualDisciplinesResults() async {
     final conn = await connection;
     final results = await conn.query('SELECT * FROM spiritual_disciplines_results');
+    return results.map((row) => row.fields).toList();
+  }
+
+  Future<void> insertPillarsResult(Map<String, dynamic> result) async {
+    final conn = await connection;
+    await conn.query('''
+      INSERT INTO pillars_results (user_id, missions, teaching, discipleship, worship)
+      VALUES (?, ?, ?, ?, ?)
+    ''', [
+      result['user_id'],
+      result['missions'],
+      result['teaching'],
+      result['discipleship'],
+      result['worship']
+    ]);
+  }
+
+  Future<List<Map<String, dynamic>>> getPillarsResults() async {
+    final conn = await connection;
+    final results = await conn.query('SELECT * FROM pillars_results');
     return results.map((row) => row.fields).toList();
   }
 }

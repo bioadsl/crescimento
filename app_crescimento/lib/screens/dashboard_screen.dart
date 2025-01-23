@@ -1,11 +1,13 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:fl_chart/fl_chart.dart';
 
 class DashboardScreen extends StatelessWidget {
+  // Funções de obtenção de dados de várias fontes (API)
   Future<List<Map<String, dynamic>>> _fetchFiveMinistriesResults() async {
     final response = await http.get(Uri.parse('http://localhost:8080/five_ministries'));
+
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
@@ -13,10 +15,11 @@ class DashboardScreen extends StatelessWidget {
     } else {
       throw Exception('Failed to load five ministries results');
     }
+
   }
 
   Future<List<Map<String, dynamic>>> _fetchFruitOfTheSpiritResults() async {
-    final response = await http.get(Uri.parse('http://localhost:8080/fruit_of_the_spirit'));
+    final response = await http.get(Uri.parse('http://localhost:8080/fruit_of_the_spirit_results'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
@@ -27,7 +30,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Future<List<Map<String, dynamic>>> _fetchIntimacyLevelResults() async {
-    final response = await http.get(Uri.parse('http://localhost:8080/intimacy_level'));
+    final response = await http.get(Uri.parse('http://localhost:8080/intimacy_level_results'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
@@ -38,7 +41,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Future<List<Map<String, dynamic>>> _fetchSpiritualGiftsResults() async {
-    final response = await http.get(Uri.parse('http://localhost:8080/spiritual_gifts'));
+    final response = await http.get(Uri.parse('http://localhost:8080/spiritual_gifts_results'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
@@ -48,31 +51,84 @@ class DashboardScreen extends StatelessWidget {
     }
   }
 
+  Future<List<Map<String, dynamic>>> _fetchPillarsResults() async {
+    final response = await http.get(Uri.parse('http://localhost:8080/pillars_results'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      return data.map((item) => item as Map<String, dynamic>).toList();
+    } else {
+      throw Exception('Failed to load pillars results');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchSpiritualDisciplinesResults() async {
+    final response = await http.get(Uri.parse('http://localhost:8080/spiritual_disciplines_results'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      return data.map((item) => item as Map<String, dynamic>).toList();
+    } else {
+      throw Exception('Failed to load spiritual disciplines results');
+    }
+  }
+
+  // Função que carrega todos os resultados
   Future<Map<String, List<Map<String, dynamic>>>> _fetchAllResults() async {
     final fiveMinistriesResults = await _fetchFiveMinistriesResults();
     final fruitOfTheSpiritResults = await _fetchFruitOfTheSpiritResults();
     final intimacyLevelResults = await _fetchIntimacyLevelResults();
     final spiritualGiftsResults = await _fetchSpiritualGiftsResults();
+    final pillarsResults = await _fetchPillarsResults();
+    final spiritualDisciplinesResults = await _fetchSpiritualDisciplinesResults();
     return {
       'fiveMinistries': fiveMinistriesResults,
       'fruitOfTheSpirit': fruitOfTheSpiritResults,
       'intimacyLevel': intimacyLevelResults,
       'spiritualGifts': spiritualGiftsResults,
+      'pillars': pillarsResults,
+      'spiritualDisciplines': spiritualDisciplinesResults,
     };
   }
 
+  // Função de mensagem de nível de intimidade
   String _getIntimacyLevelMessage(int totalScore) {
     if (totalScore <= 15) {
       return "Multidão: Você está começando sua jornada.";
     } else if (totalScore <= 25) {
-      return "Os 70 : Você está se comprometendo mais com Jesus.";
+      return "Os 70: Você está se comprometendo mais com Jesus.";
     } else if (totalScore <= 35) {
-      return "Os 12 : Você está crescendo no discipulado e serviço.";
+      return "Os 12: Você está crescendo no discipulado e serviço.";
     } else if (totalScore <= 45) {
-      return "Os 3 : Você tem um relacionamento próximo e profundo.";
+      return "Os 3: Você tem um relacionamento próximo e profundo.";
     } else {
-      return "O 1 : Você vive em íntima comunhão com Jesus.";
+      return "O 1: Você vive em íntima comunhão com Jesus.";
     }
+  }
+
+  // Função para construir gráficos
+  Widget _buildCharts(
+    List<Map<String, dynamic>> fiveMinistriesResults,
+    List<Map<String, dynamic>> fruitOfTheSpiritResults,
+    List<Map<String, dynamic>> intimacyLevelResults,
+    List<Map<String, dynamic>> spiritualGiftsResults,
+    List<Map<String, dynamic>> pillarsResults,
+    List<Map<String, dynamic>> spiritualDisciplinesResults,
+  ) {
+    // Exemplo de gráfico de barras usando fl_chart
+    return BarChart(
+      BarChartData(
+        borderData: FlBorderData(show: false),
+        barGroups: [
+          BarChartGroupData(x: 0, barRods: [
+            BarChartRodData(y: 15, colors: [Colors.blue], width: 20),
+          ]),
+          BarChartGroupData(x: 1, barRods: [
+            BarChartRodData(y: 25, colors: [Colors.red], width: 20),
+          ]),
+        ],
+      ),
+    );
   }
 
   @override
@@ -95,158 +151,25 @@ class DashboardScreen extends StatelessWidget {
             final fruitOfTheSpiritResults = snapshot.data!['fruitOfTheSpirit']!;
             final intimacyLevelResults = snapshot.data!['intimacyLevel']!;
             final spiritualGiftsResults = snapshot.data!['spiritualGifts']!;
-            return ListView(
-              children: [
-                Text('Resultados dos 5 Ministérios', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                ...fiveMinistriesResults.map((result) {
-                  return ListTile(
-                    title: Text('Usuário ${result['user_id']}'),
-                    subtitle: Text(
-                      'Apostólico: ${result['apostolic']}, '
-                      'Profético: ${result['prophetic']}, '
-                      'Evangelístico: ${result['evangelistic']}, '
-                      'Pastoral: ${result['pastoral']}, '
-                      'Ensino: ${result['teaching']}',
-                    ),
-                    trailing: Text(result['created_at'].toString()),
-                  );
-                }).toList(),
-                SizedBox(height: 16),
-                Text('Resultados dos Frutos do Espírito', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                ...fruitOfTheSpiritResults.map((result) {
-                  return ListTile(
-                    title: Text('Usuário ${result['user_id']}'),
-                    subtitle: Text(
-                      'Amor: ${result['love']}, '
-                      'Alegria: ${result['joy']}, '
-                      'Paz: ${result['peace']}, '
-                      'Paciência: ${result['patience']}, '
-                      'Bondade: ${result['kindness']}, '
-                      'Benignidade: ${result['goodness']}, '
-                      'Fidelidade: ${result['faithfulness']}, '
-                      'Mansidão: ${result['gentleness']}, '
-                      'Domínio Próprio: ${result['self_control']}',
-                    ),
-                    trailing: Text(result['created_at'].toString()),
-                  );
-                }).toList(),
-                SizedBox(height: 16),
-                Text('Resultados dos Níveis de Intimidade', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                ...intimacyLevelResults.map((result) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        title: Text('Usuário ${result['user_id']}'),
-                        subtitle: Text(
-                          'Missão: ${result['mission']}, '
-                          'Compartilhamento: ${result['sharing']}, '
-                          'Oração: ${result['prayer']}, '
-                          'Bíblia: ${result['bible']}, '
-                          'Desafios: ${result['challenges']}, '
-                          'Apoio: ${result['support']}, '
-                          'Relacionamento: ${result['relationship']}, '
-                          'Coração: ${result['heart']}, '
-                          'Pontuação Total: ${result['total_score']}',
-                        ),
-                        trailing: Text(result['created_at'].toString()),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text(
-                          _getIntimacyLevelMessage(result['total_score']),
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                    ],
-                  );
-                }).toList(),
-                SizedBox(height: 16),
-                Text('Resultados dos Dons Espirituais', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                ...spiritualGiftsResults.map((result) {
-                  return ListTile(
-                    title: Text('Usuário ${result['user_id']}'),
-                    subtitle: Text(
-                      'Profecia: ${result['prophecy']}, '
-                      'Discernimento de Espíritos: ${result['discernment']}, '
-                      'Variedade de Línguas: ${result['tongues']}, '
-                      'Interpretação de Línguas: ${result['interpretation']}, '
-                      'Sabedoria: ${result['wisdom']}, '
-                      'Conhecimento: ${result['knowledge']}, '
-                      'Fé: ${result['faith']}, '
-                      'Cura: ${result['healing']}, '
-                      'Milagres: ${result['miracles']}',
-                    ),
-                    trailing: Text(result['created_at'].toString()),
-                  );
-                }).toList(),
-                SizedBox(height: 16),
-                Text('Gráficos dos Resultados', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                Container(
-                  height: 400,
-                  child: _buildCharts(fiveMinistriesResults, fruitOfTheSpiritResults, intimacyLevelResults, spiritualGiftsResults),
-                ),
-              ],
+            final pillarsResults = snapshot.data!['pillars']!;
+            final spiritualDisciplinesResults = snapshot.data!['spiritualDisciplines']!;
+
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 16),
+                  Text('Gráficos dos Resultados', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                  Container(
+                    height: 400,
+                    child: _buildCharts(fiveMinistriesResults, fruitOfTheSpiritResults, intimacyLevelResults, spiritualGiftsResults, pillarsResults, spiritualDisciplinesResults),
+                  ),
+                ],
+              ),
             );
           }
         },
       ),
-    );
-  }
-
-  Widget _buildCharts(List<Map<String, dynamic>> fiveMinistriesResults, List<Map<String, dynamic>> fruitOfTheSpiritResults, List<Map<String, dynamic>> intimacyLevelResults, List<Map<String, dynamic>> spiritualGiftsResults) {
-    return Column(
-      children: [
-        _buildDonutChart(
-          'Resultados dos 5 Ministérios',
-          fiveMinistriesResults,
-          ['apostolic', 'prophetic', 'evangelistic', 'pastoral', 'teaching'],
-        ),
-        _buildDonutChart(
-          'Resultados dos Frutos do Espírito',
-          fruitOfTheSpiritResults,
-          ['love', 'joy', 'peace', 'patience', 'kindness', 'goodness', 'faithfulness', 'gentleness', 'self_control'],
-        ),
-        _buildDonutChart(
-          'Resultados dos Níveis de Intimidade',
-          intimacyLevelResults,
-          ['total_score'],
-        ),
-        _buildDonutChart(
-          'Resultados dos Dons Espirituais',
-          spiritualGiftsResults,
-          ['prophecy', 'discernment', 'tongues', 'interpretation', 'wisdom', 'knowledge', 'faith', 'healing', 'miracles'],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDonutChart(String title, List<Map<String, dynamic>> data, List<String> fields) {
-    List<PieChartSectionData> sections = fields.map((field) {
-      double total = data.fold(0, (sum, item) => sum + item[field]);
-      return PieChartSectionData(
-        value: total,
-        title: field,
-        radius: 60,
-        titleStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-      );
-    }).toList();
-
-    return Column(
-      children: [
-        Text(title, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-        SizedBox(
-          height: 200,
-          child: PieChart(
-            PieChartData(
-              sections: sections,
-              centerSpaceRadius: 40,
-              sectionsSpace: 2,
-              borderData: FlBorderData(show: false),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

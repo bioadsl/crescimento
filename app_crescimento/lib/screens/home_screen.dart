@@ -4,7 +4,6 @@ import 'package:crescimento/screens/dashboard_screen.dart';
 import 'package:crescimento/screens/fruit_of_the_spirit_screen.dart';
 import 'package:crescimento/screens/intimacy_level_screen.dart';
 import 'package:crescimento/screens/spiritual_discipline_screen.dart';
-import 'package:crescimento/screens/mission_item_screen.dart';
 import 'package:crescimento/screens/pillar_screen.dart';
 import 'package:crescimento/screens/spiritual_gifts_screen.dart';
 import 'package:crescimento/screens/apostolic_year_screen.dart';
@@ -59,15 +58,26 @@ class HomeScreen extends StatelessWidget {
               },
               child: Text('Disciplinas Espirituais'),
             ),
+            // SizedBox(height: 16),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => MissionItemScreen()),
+            //     );
+            //   },
+            //   child: Text('Missão CAP'),
+            // ),
+      
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MissionItemScreen()),
+                  MaterialPageRoute(builder: (context) => SpiritualGiftsScreen()),
                 );
               },
-              child: Text('Missão CAP'),
+              child: Text('Dons Espirituais'),
             ),
             SizedBox(height: 16),
             ElevatedButton(
@@ -84,10 +94,10 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SpiritualGiftsScreen()),
+                  MaterialPageRoute(builder: (context) => ApostolicYearScreen()),
                 );
               },
-              child: Text('Dons Espirituais'),
+              child: Text('Ano Apostólico'),
             ),
             SizedBox(height: 16),
             ElevatedButton(
@@ -98,16 +108,6 @@ class HomeScreen extends StatelessWidget {
                 );
               },
               child: Text('Dashboard'),
-            ),
-                      SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ApostolicYearScreen()),
-                );
-              },
-              child: Text('Ano Apostólico'),
             ),
           ],
         ),

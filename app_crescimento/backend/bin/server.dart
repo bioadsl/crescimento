@@ -79,10 +79,10 @@ class ApiService {
       await conn?.close();
     }
   }
-}
 
-class ApiService {
-  // Métodos de registro e login...
+
+//  class ApiService {
+//   // Métodos de registro e login...
 
   Future<Response> insertFiveMinistriesResult(Request request) async {
     MySqlConnection? conn;
@@ -155,6 +155,8 @@ class ApiService {
       await conn?.close();
     }
   }
+ 
+
 
   Future<Response> insertFruitOfTheSpiritResult(Request request) async {
     MySqlConnection? conn;
@@ -315,10 +317,10 @@ class ApiService {
       await conn?.close();
     }
   }
-}
 
-class ApiService {
-  // Métodos anteriores...
+
+// class ApiService {
+//   // Métodos anteriores...
 
   Future<Response> insertSpiritualGiftsResult(Request request) async {
     MySqlConnection? conn;
@@ -515,207 +517,7 @@ class ApiService {
   }
 
   Future<Response> getPillarsResults(Request request) async {
-    MySqlConnection? conn;
-    try {
-      connclass ApiService {
-  // Métodos anteriores...
-
-  Future<Response> insertSpiritualGiftsResult(Request request) async {
-    MySqlConnection? conn;
-    try {
-      final data = jsonDecode(await request.readAsString());
-      conn = await MySqlConnection.connect(dbSettings);
-
-      final result = await conn.query(
-        'INSERT INTO spiritual_gifts_results (user_id, prophecy, discernment, tongues, interpretation, wisdom, knowledge, faith, healing, miracles) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [
-          data['user_id'],
-          data['prophecy'],
-          data['discernment'],
-          data['tongues'],
-          data['interpretation'],
-          data['wisdom'],
-          data['knowledge'],
-          data['faith'],
-          data['healing'],
-          data['miracles'],
-        ],
-      );
-
-      return Response.ok(jsonEncode({'message': 'Result added successfully'}),
-          headers: {'Content-Type': 'application/json'});
-    } on MySqlException catch (e) {
-      print('MySqlException: ${e.message}');
-      return Response.internalServerError(
-          body: jsonEncode({'error': e.message}),
-          headers: {'Content-Type': 'application/json'});
-    } catch (e) {
-      print('Exception: $e');
-      return Response.internalServerError(
-          body: jsonEncode({'error': 'Failed to add result'}),
-          headers: {'Content-Type': 'application/json'});
-    } finally {
-      await conn?.close();
-    }
-  }
-
-  Future<Response> getSpiritualGiftsResults(Request request) async {
-    MySqlConnection? conn;
-    try {
-      conn = await MySqlConnection.connect(dbSettings);
-
-      final results = await conn.query('SELECT * FROM spiritual_gifts_results');
-
-      final List<Map<String, dynamic>> data = results
-          .map((result) => {
-                'id': result['id'],
-                'user_id': result['user_id'],
-                'prophecy': result['prophecy'],
-                'discernment': result['discernment'],
-                'tongues': result['tongues'],
-                'interpretation': result['interpretation'],
-                'wisdom': result['wisdom'],
-                'knowledge': result['knowledge'],
-                'faith': result['faith'],
-                'healing': result['healing'],
-                'miracles': result['miracles'],
-                'created_at': result['created_at'].toString(),
-              })
-          .toList();
-
-      return Response.ok(jsonEncode(data),
-          headers: {'Content-Type': 'application/json'});
-    } on MySqlException catch (e) {
-      print('MySqlException: ${e.message}');
-      return Response.internalServerError(
-          body: jsonEncode({'error': e.message}),
-          headers: {'Content-Type': 'application/json'});
-    } catch (e) {
-      print('Exception: $e');
-      return Response.internalServerError(
-          body: jsonEncode({'error': 'Failed to fetch results'}),
-          headers: {'Content-Type': 'application/json'});
-    } finally {
-      await conn?.close();
-    }
-  }
-
-  Future<Response> insertSpiritualDisciplinesResult(Request request) async {
-    MySqlConnection? conn;
-    try {
-      final data = jsonDecode(await request.readAsString());
-      conn = await MySqlConnection.connect(dbSettings);
-
-      final result = await conn.query(
-        'INSERT INTO spiritual_disciplines_results (user_id, prayer, bibleReading, fasting, meditation, worship, fellowship, service, silence, generosity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [
-          data['user_id'],
-          data['prayer'],
-          data['bibleReading'],
-          data['fasting'],
-          data['meditation'],
-          data['worship'],
-          data['fellowship'],
-          data['service'],
-          data['silence'],
-          data['generosity'],
-        ],
-      );
-
-      return Response.ok(jsonEncode({'message': 'Result added successfully'}),
-          headers: {'Content-Type': 'application/json'});
-    } on MySqlException catch (e) {
-      print('MySqlException: ${e.message}');
-      return Response.internalServerError(
-          body: jsonEncode({'error': e.message}),
-          headers: {'Content-Type': 'application/json'});
-    } catch (e) {
-      print('Exception: $e');
-      return Response.internalServerError(
-          body: jsonEncode({'error': 'Failed to add result'}),
-          headers: {'Content-Type': 'application/json'});
-    } finally {
-      await conn?.close();
-    }
-  }
-
-  Future<Response> getSpiritualDisciplinesResults(Request request) async {
-    MySqlConnection? conn;
-    try {
-      conn = await MySqlConnection.connect(dbSettings);
-
-      final results = await conn.query('SELECT * FROM spiritual_disciplines_results');
-
-      final List<Map<String, dynamic>> data = results
-          .map((result) => {
-                'id': result['id'],
-                'user_id': result['user_id'],
-                'prayer': result['prayer'],
-                'bibleReading': result['bibleReading'],
-                'fasting': result['fasting'],
-                'meditation': result['meditation'],
-                'worship': result['worship'],
-                'fellowship': result['fellowship'],
-                'service': result['service'],
-                'silence': result['silence'],
-                'generosity': result['generosity'],
-                'created_at': result['created_at'].toString(),
-              })
-          .toList();
-
-      return Response.ok(jsonEncode(data),
-          headers: {'Content-Type': 'application/json'});
-    } on MySqlException catch (e) {
-      print('MySqlException: ${e.message}');
-      return Response.internalServerError(
-          body: jsonEncode({'error': e.message}),
-          headers: {'Content-Type': 'application/json'});
-    } catch (e) {
-      print('Exception: $e');
-      return Response.internalServerError(
-          body: jsonEncode({'error': 'Failed to fetch results'}),
-          headers: {'Content-Type': 'application/json'});
-    } finally {
-      await conn?.close();
-    }
-  }
-
-  Future<Response> insertPillarsResult(Request request) async {
-    MySqlConnection? conn;
-    try {
-      final data = jsonDecode(await request.readAsString());
-      conn = await MySqlConnection.connect(dbSettings);
-
-      final result = await conn.query(
-        'INSERT INTO pillars_results (user_id, missions, teaching, worship, discipleship) VALUES (?, ?, ?, ?, ?)',
-        [
-          data['user_id'],
-          data['missions'],
-          data['teaching'],
-          data['worship'],
-          data['discipleship'],
-        ],
-      );
-
-      return Response.ok(jsonEncode({'message': 'Result added successfully'}),
-          headers: {'Content-Type': 'application/json'});
-    } on MySqlException catch (e) {
-      print('MySqlException: ${e.message}');
-      return Response.internalServerError(
-          body: jsonEncode({'error': e.message}),
-          headers: {'Content-Type': 'application/json'});
-    } catch (e) {
-      print('Exception: $e');
-      return Response.internalServerError(
-          body: jsonEncode({'error': 'Failed to add result'}),
-          headers: {'Content-Type': 'application/json'});
-    } finally {
-      await conn?.close();
-    }
-  }
-
-   Future<Response> getPillarsResults(Request request) async {
-    MySqlConnection? conn;
+   MySqlConnection? conn;
     try {
       conn = await MySqlConnection.connect(dbSettings);
 
@@ -723,13 +525,12 @@ class ApiService {
 
       final List<Map<String, dynamic>> data = results
           .map((result) => {
-                'id': result['id'],
-                'user_id': result['user_id'],
-                'missions': result['missions'],
-                'teaching': result['teaching'],
-                'worship': result['worship'],
-                'discipleship': result['discipleship'],
-                'created_at': result['created_at'].toString(),
+            'id': result['id'],
+            'user_id': result['user_id'],
+            'missions': result['missions'],
+            'teaching': result['teaching'],
+            'discipleship': result['discipleship'],
+            'worship': result['worship'],
               })
           .toList();
 
@@ -771,10 +572,10 @@ Middleware handleCors() {
         'Access-Control-Allow-Origin': '*', // Permite todas as origens
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      });
+        });
+      };
     };
-  };
-}
+  }
 
 void main() async {
   final apiService = ApiService();
@@ -831,4 +632,4 @@ void main() async {
   // Servindo a API
   await io.serve(handler, 'localhost', 8080);
   print('Server running on http://localhost:8080');
-}
+ }

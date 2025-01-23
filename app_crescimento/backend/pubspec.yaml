@@ -1,0 +1,12 @@
+name: crescimento
+description: App de Crescimento Espiritual
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  shelf: ^1.2.0
+  shelf_router: ^1.0.0
+  mysql1: ^0.19.2
+  shelf_cors_headers: ^0.1.5
