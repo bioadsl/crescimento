@@ -3,7 +3,7 @@ import 'package:crescimento/screens/five_ministries_screen.dart';
 import 'package:crescimento/screens/dashboard_screen.dart';
 import 'package:crescimento/screens/fruit_of_the_spirit_screen.dart';
 import 'package:crescimento/screens/intimacy_level_screen.dart';
-import 'package:crescimento/screens/spiritual_discipline_screen.dart';
+import 'package:crescimento/screens/spiritual_discipline_screen.dart'; // Verifique se esse import está correto
 import 'package:crescimento/screens/pillar_screen.dart';
 import 'package:crescimento/screens/spiritual_gifts_screen.dart';
 import 'package:crescimento/screens/apostolic_year_screen.dart';

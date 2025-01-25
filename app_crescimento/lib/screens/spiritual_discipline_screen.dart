@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SpiritualDisciplineScreen extends StatefulWidget {
   @override
-  _SpiritualDisciplineScreenState createState() => _SpiritualDisciplineScreenState();
+  _SpiritualDisciplineScreenState createState() =>
+      _SpiritualDisciplineScreenState();
 }
 
 class _SpiritualDisciplineScreenState extends State<SpiritualDisciplineScreen> {
@@ -19,17 +22,35 @@ class _SpiritualDisciplineScreenState extends State<SpiritualDisciplineScreen> {
   final Map<String, int> _silence = {};
   final Map<String, int> _generosity = {};
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      final int prayer = _prayer.values.isNotEmpty ? _prayer.values.reduce((a, b) => a + b) : 0;
-      final int bibleReading = _bibleReading.values.isNotEmpty ? _bibleReading.values.reduce((a, b) => a + b) : 0;
-      final int fasting = _fasting.values.isNotEmpty ? _fasting.values.reduce((a, b) => a + b) : 0;
-      final int meditation = _meditation.values.isNotEmpty ? _meditation.values.reduce((a, b) => a + b) : 0;
-      final int worship = _worship.values.isNotEmpty ? _worship.values.reduce((a, b) => a + b) : 0;
-      final int fellowship = _fellowship.values.isNotEmpty ? _fellowship.values.reduce((a, b) => a + b) : 0;
-      final int service = _service.values.isNotEmpty ? _service.values.reduce((a, b) => a + b) : 0;
-      final int silence = _silence.values.isNotEmpty ? _silence.values.reduce((a, b) => a + b) : 0;
-      final int generosity = _generosity.values.isNotEmpty ? _generosity.values.reduce((a, b) => a + b) : 0;
+      final int prayer = _prayer.values.isNotEmpty
+          ? _prayer.values.reduce((a, b) => a + b)
+          : 0;
+      final int bibleReading = _bibleReading.values.isNotEmpty
+          ? _bibleReading.values.reduce((a, b) => a + b)
+          : 0;
+      final int fasting = _fasting.values.isNotEmpty
+          ? _fasting.values.reduce((a, b) => a + b)
+          : 0;
+      final int meditation = _meditation.values.isNotEmpty
+          ? _meditation.values.reduce((a, b) => a + b)
+          : 0;
+      final int worship = _worship.values.isNotEmpty
+          ? _worship.values.reduce((a, b) => a + b)
+          : 0;
+      final int fellowship = _fellowship.values.isNotEmpty
+          ? _fellowship.values.reduce((a, b) => a + b)
+          : 0;
+      final int service = _service.values.isNotEmpty
+          ? _service.values.reduce((a, b) => a + b)
+          : 0;
+      final int silence = _silence.values.isNotEmpty
+          ? _silence.values.reduce((a, b) => a + b)
+          : 0;
+      final int generosity = _generosity.values.isNotEmpty
+          ? _generosity.values.reduce((a, b) => a + b)
+          : 0;
 
       final Map<String, dynamic> result = {
         'user_id': 1, // Substitua pelo ID do usuário real
@@ -44,8 +65,60 @@ class _SpiritualDisciplineScreenState extends State<SpiritualDisciplineScreen> {
         'generosity': generosity,
       };
 
-      // Enviar os resultados para o servidor ou processá-los conforme necessário
-      print(result);
+      try {
+        final response = await http.post(
+          Uri.parse('http://localhost:8080/spiritual_disciplines'),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(result),
+        );
+
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Resultado'),
+              content: Text('Os resultados foram enviados com sucesso!'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          final errorResponse = json.decode(response.body);
+          print('Falha ao enviar resultado: ${errorResponse['error']}');
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Erro'),
+              content: Text('Falha ao enviar os resultados: ${errorResponse['error']}'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      } catch (e) {
+        print('Erro: $e');
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Erro'),
+            content: Text('Ocorreu um erro ao enviar os resultados. Tente novamente mais tarde.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
@@ -170,3 +243,4 @@ class _SpiritualDisciplineScreenState extends State<SpiritualDisciplineScreen> {
     );
   }
 }
+      

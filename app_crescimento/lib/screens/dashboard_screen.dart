@@ -6,21 +6,17 @@ import 'dart:convert';
 class DashboardScreen extends StatelessWidget {
   // Funções de obtenção de dados de várias fontes (API)
   Future<List<Map<String, dynamic>>> _fetchFiveMinistriesResults() async {
-    final response = await http.get(Uri.parse('http://localhost:8080/five_ministries'));
-
-
+    final response = await http.get(Uri.parse('http://localhost:8080/five_ministries_results'));
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((item) => item as Map<String, dynamic>).toList();
     } else {
       throw Exception('Failed to load five ministries results');
     }
-
   }
 
   Future<List<Map<String, dynamic>>> _fetchFruitOfTheSpiritResults() async {
     final response = await http.get(Uri.parse('http://localhost:8080/fruit_of_the_spirit_results'));
-
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((item) => item as Map<String, dynamic>).toList();
@@ -31,7 +27,6 @@ class DashboardScreen extends StatelessWidget {
 
   Future<List<Map<String, dynamic>>> _fetchIntimacyLevelResults() async {
     final response = await http.get(Uri.parse('http://localhost:8080/intimacy_level_results'));
-
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((item) => item as Map<String, dynamic>).toList();
@@ -42,7 +37,6 @@ class DashboardScreen extends StatelessWidget {
 
   Future<List<Map<String, dynamic>>> _fetchSpiritualGiftsResults() async {
     final response = await http.get(Uri.parse('http://localhost:8080/spiritual_gifts_results'));
-
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((item) => item as Map<String, dynamic>).toList();
@@ -53,7 +47,6 @@ class DashboardScreen extends StatelessWidget {
 
   Future<List<Map<String, dynamic>>> _fetchPillarsResults() async {
     final response = await http.get(Uri.parse('http://localhost:8080/pillars_results'));
-
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((item) => item as Map<String, dynamic>).toList();
@@ -64,7 +57,6 @@ class DashboardScreen extends StatelessWidget {
 
   Future<List<Map<String, dynamic>>> _fetchSpiritualDisciplinesResults() async {
     final response = await http.get(Uri.parse('http://localhost:8080/spiritual_disciplines_results'));
-
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((item) => item as Map<String, dynamic>).toList();
@@ -106,27 +98,49 @@ class DashboardScreen extends StatelessWidget {
     }
   }
 
-  // Função para construir gráficos
-  Widget _buildCharts(
-    List<Map<String, dynamic>> fiveMinistriesResults,
-    List<Map<String, dynamic>> fruitOfTheSpiritResults,
-    List<Map<String, dynamic>> intimacyLevelResults,
-    List<Map<String, dynamic>> spiritualGiftsResults,
-    List<Map<String, dynamic>> pillarsResults,
-    List<Map<String, dynamic>> spiritualDisciplinesResults,
-  ) {
-    // Exemplo de gráfico de barras usando fl_chart
-    return BarChart(
-      BarChartData(
+  // Função para obter a cor para cada item
+  Color _getColorForLabel(String label) {
+    switch (label) {
+      case 'Ministério 1':
+        return Colors.blue;
+      case 'Ministério 2':
+        return Colors.green;
+      case 'Ministério 3':
+        return Colors.red;
+      // Adicione outros casos conforme necessário
+      default:
+        return Colors.grey;
+    }
+  }
+
+  // Função para converter dados para as proporções necessárias para o gráfico de donut
+  List<PieChartSectionData> _getPieChartData(List<Map<String, dynamic>> results) {
+    return results.map((item) {
+      final value = item['value'] ?? 0.0; // Substitua 'value' pelo nome correto da chave no seu JSON
+      final label = item['label'] ?? 'Sem Nome'; // Substitua 'label' pelo nome correto da chave no seu JSON
+
+      return PieChartSectionData(
+        value: value,
+        color: _getColorForLabel(label), // Define uma cor para cada categoria
+        title: label,
+        radius: 100, // Tamanho do gráfico donut
+        titleStyle: TextStyle(
+          fontSize: 14, 
+          fontWeight: FontWeight.bold, 
+          color: Colors.white
+        ),
+      );
+    }).toList();
+  }
+
+  // Gráfico de Donut
+  Widget _buildDonutChart(List<Map<String, dynamic>> results) {
+    return PieChart(
+      PieChartData(
+        sections: _getPieChartData(results),
         borderData: FlBorderData(show: false),
-        barGroups: [
-          BarChartGroupData(x: 0, barRods: [
-            BarChartRodData(y: 15, colors: [Colors.blue], width: 20),
-          ]),
-          BarChartGroupData(x: 1, barRods: [
-            BarChartRodData(y: 25, colors: [Colors.red], width: 20),
-          ]),
-        ],
+        centerSpaceRadius: 50, // Cria o "buraco" no centro do gráfico
+        sectionsSpace: 2, // Espaço entre as seções
       ),
     );
   }
@@ -162,7 +176,7 @@ class DashboardScreen extends StatelessWidget {
                   Text('Gráficos dos Resultados', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
                   Container(
                     height: 400,
-                    child: _buildCharts(fiveMinistriesResults, fruitOfTheSpiritResults, intimacyLevelResults, spiritualGiftsResults, pillarsResults, spiritualDisciplinesResults),
+                    child: _buildDonutChart(fiveMinistriesResults),
                   ),
                 ],
               ),

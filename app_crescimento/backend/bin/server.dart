@@ -568,14 +568,15 @@ Middleware handleCors() {
       // Responde normalmente para as requisições de outros métodos
       Response response = await innerHandler(request);
 
+      // Adicionando os cabeçalhos CORS em todas as respostas
       return response.change(headers: {
         'Access-Control-Allow-Origin': '*', // Permite todas as origens
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        });
-      };
+      });
     };
-  }
+  };
+}
 
 void main() async {
   final apiService = ApiService();
@@ -591,37 +592,37 @@ void main() async {
   router.post('/five_ministries', apiService.insertFiveMinistriesResult);
 
   // Rota para obter resultados dos 5 ministérios
-  router.get('/five_ministries', apiService.getFiveMinistriesResults);
+  router.get('/five_ministries_results', apiService.getFiveMinistriesResults);
 
   // Rota para inserir resultados dos frutos do Espírito
   router.post('/fruit_of_the_spirit', apiService.insertFruitOfTheSpiritResult);
 
   // Rota para obter resultados dos frutos do Espírito
-  router.get('/fruit_of_the_spirit', apiService.getFruitOfTheSpiritResults);
+  router.get('/fruit_of_the_spirit_results', apiService.getFruitOfTheSpiritResults);
 
   // Rota para inserir resultados dos níveis de intimidade
   router.post('/intimacy_level', apiService.insertIntimacyLevelResult);
 
   // Rota para obter resultados dos níveis de intimidade
-  router.get('/intimacy_level', apiService.getIntimacyLevelResults);
+  router.get('/intimacy_level_results', apiService.getIntimacyLevelResults);
 
   // Rota para inserir resultados dos dons espirituais
   router.post('/spiritual_gifts', apiService.insertSpiritualGiftsResult);
 
   // Rota para obter resultados dos dons espirituais
-  router.get('/spiritual_gifts', apiService.getSpiritualGiftsResults);
+  router.get('/spiritual_gifts_results', apiService.getSpiritualGiftsResults);
 
   // Rota para inserir resultados das disciplinas espirituais
   router.post('/spiritual_disciplines', apiService.insertSpiritualDisciplinesResult);
 
   // Rota para obter resultados das disciplinas espirituais
-  router.get('/spiritual_disciplines', apiService.getSpiritualDisciplinesResults);
+  router.get('/spiritual_disciplines_results', apiService.getSpiritualDisciplinesResults);
 
   // Rota para inserir resultados dos pilares
   router.post('/pillars', apiService.insertPillarsResult);
 
   // Rota para obter resultados dos pilares
-  router.get('/pillars', apiService.getPillarsResults);
+  router.get('/pillars_results', apiService.getPillarsResults);
 
   // Adiciona o middleware de CORS antes do logRequests() e do handler
   final handler = const Pipeline()
@@ -632,4 +633,4 @@ void main() async {
   // Servindo a API
   await io.serve(handler, 'localhost', 8080);
   print('Server running on http://localhost:8080');
- }
+}
