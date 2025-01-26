@@ -56,15 +56,15 @@ class _IntimacyLevelScreenState extends State<IntimacyLevelScreen> {
         if (response.statusCode == 200) {
           String resultMessage;
           if (totalScore <= 15) {
-            resultMessage = "Multidão – Você está começando sua jornada.";
+            resultMessage = "Multidão Você está começando sua jornada.";
           } else if (totalScore <= 25) {
-            resultMessage = "Os 70 – Você está se comprometendo mais com Jesus.";
+            resultMessage = "Os 70 Você está se comprometendo mais com Jesus.";
           } else if (totalScore <= 35) {
-            resultMessage = "Os 12 – Você está crescendo no discipulado e serviço.";
+            resultMessage = "Os 12 Você está crescendo no discipulado e serviço.";
           } else if (totalScore <= 45) {
-            resultMessage = "Os 3 – Você tem um relacionamento próximo e profundo.";
+            resultMessage = "Os 3 Você tem um relacionamento próximo e profundo.";
           } else {
-            resultMessage = "O 1 – Você vive em íntima comunhão com Jesus.";
+            resultMessage = "O 1 Você vive em íntima comunhão com Jesus.";
           }
 
           showDialog(
