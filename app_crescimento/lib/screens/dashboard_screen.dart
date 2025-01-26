@@ -121,7 +121,9 @@ class DashboardScreen extends StatelessWidget {
         _buildDonutChart('Resultados dos Frutos do Espírito', data['fruitOfTheSpirit']!, [
           'love', 'joy', 'peace', 'patience', 'kindness', 'goodness', 'faithfulness', 'gentleness', 'self_control'
         ]),
-        _buildDonutChart('Resultados dos Níveis de Intimidade', data['intimacyLevel']!, ['total_score']),
+        _buildDonutChart('Resultados dos Níveis de Intimidade', data['intimacyLevel']!, [
+                      'mission', 'sharing', 'prayer', 'bible', 'challenges', 'support', 'relationship', 'heart',
+                    ]),
         _buildDonutChart('Resultados dos Dons Espirituais', data['spiritualGifts']!, [
           'prophecy', 'discernment', 'tongues', 'interpretation', 'wisdom', 'knowledge', 'faith', 'healing', 'miracles'
         ]),
@@ -130,12 +132,30 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildDonutChart(String title, List<Map<String, dynamic>> data, List<String> fields) {
-    List<PieChartSectionData> sections = fields.map((field) {
+    // Lista de cores para as fatias
+    List<Color> colors = [
+      Colors.red,
+      Colors.blue,
+      Colors.green,
+      Colors.orange,
+      Colors.purple,
+      Colors.yellow,
+      Colors.cyan,
+      Colors.pink,
+      Colors.teal,
+    ];
+
+    List<PieChartSectionData> sections = fields.asMap().entries.map((entry) {
+      int index = entry.key;
+      String field = entry.value;
+
       double total = data.fold(0, (sum, item) => sum + (item[field] ?? 0));
+
       return PieChartSectionData(
         value: total,
         title: field,
         radius: 60,
+        color: colors[index % colors.length], // Atribui cores ciclicamente
         titleStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
       );
     }).toList();
