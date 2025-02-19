@@ -3,14 +3,17 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class SpiritualGiftsScreen extends StatefulWidget {
+  const SpiritualGiftsScreen({super.key});
+
   @override
-  _SpiritualGiftsScreenState createState() => _SpiritualGiftsScreenState();
+  State<SpiritualGiftsScreen> createState() => _SpiritualGiftsScreenState();
 }
 
 class _SpiritualGiftsScreenState extends State<SpiritualGiftsScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _pageController = PageController();
+  int _currentPage = 0;
 
-  // Controllers for the form fields
   final Map<String, int> _prophecy = {};
   final Map<String, int> _discernment = {};
   final Map<String, int> _tongues = {};
@@ -21,29 +24,148 @@ class _SpiritualGiftsScreenState extends State<SpiritualGiftsScreen> {
   final Map<String, int> _healing = {};
   final Map<String, int> _miracles = {};
 
+  final List<Map<String, dynamic>> _gifts = [
+    {
+      'title': 'Profecia',
+      'icon': Icons.record_voice_over,
+      'color': Colors.purple.shade400,
+      'description': 'Capacidade de receber e transmitir mensagens divinas',
+      'map': '_prophecy',
+      'questions': [
+        'Frequentemente sinto que Deus coloca mensagens específicas em meu coração.',
+        'Tenho um desejo constante de falar a verdade com coragem e clareza.',
+        'Outros já confirmaram que palavras que compartilhei vieram de Deus.',
+        'Identifico facilmente o que está alinhado com a Palavra de Deus.',
+        'Sou usado para edificar, exortar e consolar outras pessoas.',
+      ],
+    },
+    {
+      'title': 'Discernimento',
+      'icon': Icons.visibility,
+      'color': Colors.blue.shade400,
+      'description': 'Habilidade de distinguir entre espíritos',
+      'map': '_discernment',
+      'questions': [
+        'Consigo perceber a presença de forças espirituais em situações.',
+        'Tenho forte intuição sobre a origem divina ou maligna de algo.',
+        'Já identifiquei quando algo parecia bom, mas não era de Deus.',
+        'Reconheço facilmente falsos ensinos ou práticas contrárias.',
+        'Sinto responsabilidade de alertar contra enganos espirituais.',
+      ],
+    },
+    {
+      'title': 'Línguas',
+      'icon': Icons.language,
+      'color': Colors.orange.shade400,
+      'description': 'Dom de falar em línguas espirituais',
+      'map': '_tongues',
+      'questions': [
+        'Tenho facilidade em orar em línguas ou busco este dom.',
+        'As línguas me ajudam a expressar melhor minha devoção.',
+        'Já usei línguas em momentos de oração intensa.',
+        'Falar em línguas edifica meu espírito e conexão com Deus.',
+        'Vejo o dom como expressão genuína do Espírito Santo.',
+      ],
+    },
+    {
+      'title': 'Interpretação',
+      'icon': Icons.translate,
+      'color': Colors.green.shade400,
+      'description': 'Capacidade de interpretar mensagens em línguas',
+      'map': '_interpretation',
+      'questions': [
+        'Deus me dá entendimento sobre mensagens em línguas.',
+        'Já compreendi o significado de algo falado em línguas.',
+        'Acredito na importância da interpretação para edificação.',
+        'Sinto responsabilidade de trazer clareza às línguas.',
+        'Tenho forte desejo de buscar e exercer este dom.',
+      ],
+    },
+    {
+      'title': 'Sabedoria',
+      'icon': Icons.lightbulb,
+      'color': Colors.amber.shade400,
+      'description': 'Dom de aconselhar com sabedoria divina',
+      'map': '_wisdom',
+      'questions': [
+        'Ofereço conselhos baseados na Palavra para situações complexas.',
+        'Percebo a sabedoria divina em situações difíceis.',
+        'Outros me procuram em busca de orientação espiritual.',
+        'Deus me dá discernimento para entender problemas.',
+        'Aplico verdades bíblicas em decisões práticas.',
+      ],
+    },
+    {
+      'title': 'Conhecimento',
+      'icon': Icons.school,
+      'color': Colors.indigo.shade400,
+      'description': 'Revelação sobrenatural de informações',
+      'map': '_knowledge',
+      'questions': [
+        'Recebo informações que não poderia saber naturalmente.',
+        'Já soube algo específico que confirmou direção divina.',
+        'Compreendo as Escrituras de forma profunda.',
+        'Deus me revela verdades para compartilhar no momento certo.',
+        'Desejo constantemente aprender mais sobre Deus.',
+      ],
+    },
+    {
+      'title': 'Fé',
+      'icon': Icons.favorite,
+      'color': Colors.red.shade400,
+      'description': 'Fé sobrenatural para crer no impossível',
+      'map': '_faith',
+      'questions': [
+        'Tenho confiança inabalável mesmo em dificuldades.',
+        'Outros se sentem encorajados pela minha fé.',
+        'Já confiei em Deus para o impossível e vi resultados.',
+        'Creio na provisão divina em qualquer circunstância.',
+        'Oro com ousadia por coisas aparentemente inatingíveis.',
+      ],
+    },
+    {
+      'title': 'Cura',
+      'icon': Icons.healing,
+      'color': Colors.teal.shade400,
+      'description': 'Dom de ministrar cura divina',
+      'map': '_healing',
+      'questions': [
+        'Sinto forte desejo de orar pela cura de outros.',
+        'Creio que Deus ainda cura como no passado.',
+        'Já testemunhei curas após oração ou imposição de mãos.',
+        'Tenho empatia por pessoas que sofrem com doenças.',
+        'Sinto que Deus me usa como instrumento de cura.',
+      ],
+    },
+    {
+      'title': 'Milagres',
+      'icon': Icons.flash_on,
+      'color': Colors.deepPurple.shade400,
+      'description': 'Operação de obras sobrenaturais',
+      'map': '_miracles',
+      'questions': [
+        'Creio que Deus pode operar milagres através de mim.',
+        'Já vivi ou testemunhei milagres inexplicáveis.',
+        'Tenho convicção de que Deus ainda faz obras sobrenaturais.',
+        'Acredito em intervenções divinas em casos extremos.',
+        'Inspiro esperança em Deus para o impossível.',
+      ],
+    },
+  ];
+
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      final int prophecy = _prophecy.values.isNotEmpty ? _prophecy.values.reduce((a, b) => a + b) : 0;
-      final int discernment = _discernment.values.isNotEmpty ? _discernment.values.reduce((a, b) => a + b) : 0;
-      final int tongues = _tongues.values.isNotEmpty ? _tongues.values.reduce((a, b) => a + b) : 0;
-      final int interpretation = _interpretation.values.isNotEmpty ? _interpretation.values.reduce((a, b) => a + b) : 0;
-      final int wisdom = _wisdom.values.isNotEmpty ? _wisdom.values.reduce((a, b) => a + b) : 0;
-      final int knowledge = _knowledge.values.isNotEmpty ? _knowledge.values.reduce((a, b) => a + b) : 0;
-      final int faith = _faith.values.isNotEmpty ? _faith.values.reduce((a, b) => a + b) : 0;
-      final int healing = _healing.values.isNotEmpty ? _healing.values.reduce((a, b) => a + b) : 0;
-      final int miracles = _miracles.values.isNotEmpty ? _miracles.values.reduce((a, b) => a + b) : 0;
-
-      final Map<String, dynamic> result = {
-        'user_id': 1, // Substitua pelo ID do usuário real
-        'prophecy': prophecy,
-        'discernment': discernment,
-        'tongues': tongues,
-        'interpretation': interpretation,
-        'wisdom': wisdom,
-        'knowledge': knowledge,
-        'faith': faith,
-        'healing': healing,
-        'miracles': miracles,
+      final Map<String, int> result = {
+        'user_id': 1,
+        'prophecy': _calculateTotal(_prophecy),
+        'discernment': _calculateTotal(_discernment),
+        'tongues': _calculateTotal(_tongues),
+        'interpretation': _calculateTotal(_interpretation),
+        'wisdom': _calculateTotal(_wisdom),
+        'knowledge': _calculateTotal(_knowledge),
+        'faith': _calculateTotal(_faith),
+        'healing': _calculateTotal(_healing),
+        'miracles': _calculateTotal(_miracles),
       };
 
       try {
@@ -54,82 +176,235 @@ class _SpiritualGiftsScreenState extends State<SpiritualGiftsScreen> {
         );
 
         if (response.statusCode == 200) {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Resultado'),
-              content: Text('Os resultados foram enviados com sucesso!'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                ),
-              ],
-            ),
-          );
+          _showResultDialog('Sucesso!', 'Suas respostas foram enviadas com sucesso.');
         } else {
           final errorResponse = json.decode(response.body);
-          print('Failed to submit result: ${errorResponse['error']}');
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Erro'),
-              content: Text('Falha ao enviar os resultados: ${errorResponse['error']}'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                ),
-              ],
-            ),
-          );
+          _showResultDialog('Erro', 'Falha ao enviar: ${errorResponse['error']}');
         }
       } catch (e) {
-        print('Error: $e');
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Erro'),
-            content: Text('Ocorreu um erro ao enviar os resultados. Tente novamente mais tarde.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
+        _showResultDialog('Erro', 'Ocorreu um erro. Tente novamente mais tarde.');
       }
     }
   }
 
-  Widget _buildRadioGroup(String question, Map<String, int> group, String key) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(question),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(5, (index) {
-            return Expanded(
-              child: Row(
-                children: [
-                  Radio<int>(
-                    value: index + 1,
-                    groupValue: group[key],
-                    onChanged: (value) {
-                      setState(() {
-                        group[key] = value!;
-                      });
-                    },
-                  ),
-                  Text('${index + 1}'),
-                ],
+  int _calculateTotal(Map<String, int> map) {
+    return map.values.isNotEmpty ? map.values.reduce((a, b) => a + b) : 0;
+  }
+
+  void _showResultDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Map<String, int> _getMapForGift(String mapName) {
+    switch (mapName) {
+      case '_prophecy':
+        return _prophecy;
+      case '_discernment':
+        return _discernment;
+      case '_tongues':
+        return _tongues;
+      case '_interpretation':
+        return _interpretation;
+      case '_wisdom':
+        return _wisdom;
+      case '_knowledge':
+        return _knowledge;
+      case '_faith':
+        return _faith;
+      case '_healing':
+        return _healing;
+      case '_miracles':
+        return _miracles;
+      default:
+        return {};
+    }
+  }
+
+  Widget _buildQuestionCard(String question, Map<String, int> answers, String key, Color color) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              question,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
-            );
-          }),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(5, (index) {
+                final isSelected = answers[key] == index + 1;
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      answers[key] = index + 1;
+                    });
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isSelected ? color : Colors.grey.shade100,
+                      border: Border.all(
+                        color: isSelected ? color : Colors.grey.shade300,
+                        width: 2,
+                      ),
+                      boxShadow: isSelected
+                          ? [
+                              BoxShadow(
+                                color: color.withOpacity(0.4),
+                                blurRadius: 8,
+                                spreadRadius: 2,
+                              ),
+                            ]
+                          : null,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${index + 1}',
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : Colors.grey.shade700,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _buildInstructionsPage() {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.card_giftcard,
+            size: 64,
+            color: Colors.purple,
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Dons Espirituais',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Descubra seus dons espirituais respondendo às perguntas com sinceridade.',
+            style: TextStyle(fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Use uma escala de 1 a 5, onde:\n1 = Não me descreve\n5 = Descreve perfeitamente',
+            style: TextStyle(fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+          ElevatedButton(
+            onPressed: () {
+              _pageController.nextPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: const Text(
+              'Começar',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNavigationButtons() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          if (_currentPage > 0)
+            ElevatedButton(
+              onPressed: () {
+                _pageController.previousPage(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
+              child: const Text('Anterior'),
+            ),
+          ElevatedButton(
+            onPressed: () {
+              _pageController.nextPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
+            child: const Text('Próximo'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: ElevatedButton(
+        onPressed: _submitForm,
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size(double.infinity, 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: const Text(
+          'Finalizar Avaliação',
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
     );
   }
 
@@ -137,90 +412,87 @@ class _SpiritualGiftsScreenState extends State<SpiritualGiftsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Questionário de Dons Espirituais'),
+        title: const Text('Dons Espirituais'),
+        elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              Text(
-                'INSTRUÇÕES\nResponda cada pergunta com sinceridade, escolhendo a opção que melhor descreve você. Use uma escala de 1 a 5, onde:\n1 = Não me descreve.\n5 = Descreve perfeitamente.',
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: 16),
-              Text('Seção 1: Profecia', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              _buildRadioGroup('Frequentemente sinto que Deus coloca mensagens específicas em meu coração para compartilhar.', _prophecy, 'q1'),
-              _buildRadioGroup('Tenho um desejo constante de falar a verdade com coragem e clareza.', _prophecy, 'q2'),
-              _buildRadioGroup('Outros já confirmaram que palavras que compartilhei vieram de Deus.', _prophecy, 'q3'),
-              _buildRadioGroup('Tenho facilidade em identificar quando algo está alinhado ou desalinhado com a Palavra de Deus.', _prophecy, 'q4'),
-              _buildRadioGroup('Sinto que sou usado por Deus para edificar, exortar e consolar outras pessoas.', _prophecy, 'q5'),
-              SizedBox(height: 16),
-              Text('Seção 2: Discernimento de Espíritos', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              _buildRadioGroup('Consigo perceber a presença ou influência de forças espirituais em situações ou pessoas.', _discernment, 'q1'),
-              _buildRadioGroup('Frequentemente sinto uma forte intuição sobre a origem divina ou maligna de algo.', _discernment, 'q2'),
-              _buildRadioGroup('Já identifiquei quando algo parecia bom, mas não era de Deus.', _discernment, 'q3'),
-              _buildRadioGroup('Tenho facilidade em reconhecer falsos ensinos ou práticas contrárias à Palavra de Deus.', _discernment, 'q4'),
-              _buildRadioGroup('Sinto uma responsabilidade de alertar ou proteger outros contra enganos espirituais.', _discernment, 'q5'),
-              SizedBox(height: 16),
-              Text('Seção 3: Variedade de Línguas', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              _buildRadioGroup('Tenho facilidade em orar em línguas ou busco intensamente este dom.', _tongues, 'q1'),
-              _buildRadioGroup('Sinto que as línguas me ajudam a expressar melhor minha devoção a Deus.', _tongues, 'q2'),
-              _buildRadioGroup('Já usei as línguas em momentos de oração intensa ou intercessão.', _tongues, 'q3'),
-              _buildRadioGroup('Sinto que falar em línguas edifica meu espírito e minha conexão com Deus.', _tongues, 'q4'),
-              _buildRadioGroup('Vejo o dom de línguas como uma expressão genuína do Espírito Santo.', _tongues, 'q5'),
-              SizedBox(height: 16),
-              Text('Seção 4: Interpretação de Línguas', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              _buildRadioGroup('Sinto que Deus me dá entendimento sobre mensagens espirituais em línguas.', _interpretation, 'q1'),
-              _buildRadioGroup('Já tive experiências onde compreendi o significado de algo falado em línguas.', _interpretation, 'q2'),
-              _buildRadioGroup('Acredito que a interpretação de línguas é essencial para edificação coletiva.', _interpretation, 'q3'),
-              _buildRadioGroup('Sinto uma responsabilidade de trazer clareza e entendimento quando línguas são faladas.', _interpretation, 'q4'),
-              _buildRadioGroup('Tenho um forte desejo de buscar e exercer este dom.', _interpretation, 'q5'),
-              SizedBox(height: 16),
-              Text('Seção 5: Palavra de Sabedoria', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              _buildRadioGroup('Tenho facilidade em oferecer conselhos baseados na Palavra de Deus para resolver situações complexas.', _wisdom, 'q1'),
-              _buildRadioGroup('Consigo perceber a sabedoria divina em meio a situações difíceis.', _wisdom, 'q2'),
-              _buildRadioGroup('Outros frequentemente me procuram em busca de orientação espiritual.', _wisdom, 'q3'),
-              _buildRadioGroup('Sinto que Deus me dá discernimento para compreender a raiz dos problemas.', _wisdom, 'q4'),
-              _buildRadioGroup('Tenho habilidade em aplicar verdades bíblicas em decisões práticas.', _wisdom, 'q5'),
-              SizedBox(height: 16),
-              Text('Seção 6: Palavra de Conhecimento', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              _buildRadioGroup('Frequentemente percebo informações sobre pessoas ou situações que não poderiam ser conhecidas naturalmente.', _knowledge, 'q1'),
-              _buildRadioGroup('Já tive momentos em que sabia algo específico sobre alguém que confirmou uma direção divina.', _knowledge, 'q2'),
-              _buildRadioGroup('Tenho facilidade em compreender as Escrituras de forma profunda e aplicada.', _knowledge, 'q3'),
-              _buildRadioGroup('Sinto que Deus me revela verdades para compartilhar com outros no momento certo.', _knowledge, 'q4'),
-              _buildRadioGroup('Tenho um desejo constante de aprender mais sobre Deus e Sua Palavra.', _knowledge, 'q5'),
-              SizedBox(height: 16),
-              Text('Seção 7: Fé', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              _buildRadioGroup('Tenho confiança inabalável em Deus mesmo em situações difíceis.', _faith, 'q1'),
-              _buildRadioGroup('Outros frequentemente se sentem encorajados pela minha atitude de fé.', _faith, 'q2'),
-              _buildRadioGroup('Já vivi experiências onde confiei em Deus para o impossível e vi resultados.', _faith, 'q3'),
-              _buildRadioGroup('Sinto que Deus me deu a habilidade de acreditar em Sua provisão em qualquer circunstância.', _faith, 'q4'),
-              _buildRadioGroup('Sou motivado a orar com ousadia por coisas que parecem inatingíveis.', _faith, 'q5'),
-              SizedBox(height: 16),
-              Text('Seção 8: Dons de Cura', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              _buildRadioGroup('Já senti um forte desejo de orar pela cura física ou emocional de outras pessoas.', _healing, 'q1'),
-              _buildRadioGroup('Acredito que Deus deseja e pode curar pessoas hoje como fazia no passado.', _healing, 'q2'),
-              _buildRadioGroup('Já testemunhei ou experimentei curas após orar ou impor as mãos sobre alguém.', _healing, 'q3'),
-              _buildRadioGroup('Tenho empatia profunda por pessoas que sofrem com doenças ou dores.', _healing, 'q4'),
-              _buildRadioGroup('Sinto que Deus pode me usar como um instrumento de cura em diferentes situações.', _healing, 'q5'),
-              SizedBox(height: 16),
-              Text('Seção 9: Operação de Milagres', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              _buildRadioGroup('Tenho fé de que Deus pode operar milagres através de mim para mostrar Seu poder.', _miracles, 'q1'),
-              _buildRadioGroup('Já vivi ou testemunhei milagres que desafiam a lógica e a ciência.', _miracles, 'q2'),
-              _buildRadioGroup('Sinto uma convicção forte de que Deus ainda faz obras sobrenaturais hoje.', _miracles, 'q3'),
-              _buildRadioGroup('Tenho facilidade em acreditar em intervenções sobrenaturais em situações extremas.', _miracles, 'q4'),
-              _buildRadioGroup('Outros me reconhecem como uma pessoa que inspira esperança em Deus para o impossível.', _miracles, 'q5'),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text('Enviar'),
-              ),
-            ],
-          ),
-        ),
+      body: PageView.builder(
+        controller: _pageController,
+        onPageChanged: (page) {
+          setState(() {
+            _currentPage = page;
+          });
+        },
+        itemCount: _gifts.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return _buildInstructionsPage();
+          }
+
+          final gift = _gifts[index - 1];
+          final answers = _getMapForGift(gift['map']);
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Icon(
+                          gift['icon'],
+                          size: 32,
+                          color: gift['color'],
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                gift['title'],
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                gift['description'],
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ...gift['questions'].asMap().entries.map((entry) {
+                  return _buildQuestionCard(
+                    entry.value,
+                    answers,
+                    'q${entry.key + 1}',
+                    gift['color'],
+                  );
+                }).toList(),
+              ],
+            ),
+          );
+        },
       ),
+      bottomNavigationBar: _currentPage == _gifts.length
+          ? _buildSubmitButton()
+          : _buildNavigationButtons(),
     );
   }
 }
