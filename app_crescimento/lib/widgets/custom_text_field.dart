@@ -4,7 +4,7 @@ class CustomTextField extends StatelessWidget {
   final String labelText;
   final bool obscureText;
 
-  CustomTextField({required this.labelText, this.obscureText = false});
+  const CustomTextField({super.key, required this.labelText, this.obscureText = false});
 
   @override
   Widget build(BuildContext context) {

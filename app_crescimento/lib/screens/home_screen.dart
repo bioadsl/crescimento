@@ -7,6 +7,7 @@ import 'package:app_crescimento/screens/spiritual_discipline_screen.dart';
 import 'package:app_crescimento/screens/pillar_screen.dart';
 import 'package:app_crescimento/screens/spiritual_gifts_screen.dart';
 import 'package:app_crescimento/screens/apostolic_year_screen.dart';
+import 'package:app_crescimento/screens/history_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -41,56 +42,68 @@ class HomeScreen extends StatelessWidget {
                 'Descubra seu Ministério',
                 Icons.person_search,
                 Colors.blue,
-                FiveMinistriesScreen(),
+                const FiveMinistriesScreen(),
               ),
               _buildMenuCard(
                 context,
                 'Frutos do Espírito',
                 Icons.local_florist,
                 Colors.green,
-                FruitOfTheSpiritScreen(),
+                const FruitOfTheSpiritScreen(),
               ),
               _buildMenuCard(
                 context,
                 'Níveis de Intimidade',
                 Icons.favorite,
                 Colors.red,
-                IntimacyLevelScreen(),
+                const IntimacyLevelScreen(),
               ),
               _buildMenuCard(
                 context,
                 'Disciplinas Espirituais',
                 Icons.book,
                 Colors.purple,
-                SpiritualDisciplineScreen(),
+                const SpiritualDisciplineScreen(),
               ),
               _buildMenuCard(
                 context,
                 'Dons Espirituais',
                 Icons.card_giftcard,
                 Colors.orange,
-                SpiritualGiftsScreen(),
+                const SpiritualGiftsScreen(),
               ),
               _buildMenuCard(
                 context,
                 'Pilares CAP',
                 Icons.foundation,
                 Colors.brown,
-                PillarScreen(),
+                const PillarScreen(),
               ),
               _buildMenuCard(
                 context,
                 'Ano Apostólico',
                 Icons.calendar_today,
                 Colors.teal,
-                ApostolicYearScreen(),
+                const ApostolicYearScreen(),
               ),
               _buildMenuCard(
                 context,
                 'Dashboard',
                 Icons.dashboard,
                 Colors.indigo,
-                DashboardScreen(),
+                const DashboardScreen(),
+              ),
+              _buildButton(
+                context,
+                'Histórico',
+                Icons.history,
+                Colors.purple,
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HistoryScreen(),
+                  ),
+                ),
               ),
             ],
           ),
@@ -112,6 +125,38 @@ class HomeScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => screen),
           );
         },
+        borderRadius: BorderRadius.circular(15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 40,
+              color: color,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(BuildContext context, String title, IconData icon, Color color, VoidCallback onPressed) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: InkWell(
+        onTap: onPressed,
         borderRadius: BorderRadius.circular(15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

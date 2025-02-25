@@ -1,7 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'dart:io';
+import 'package:printing/printing.dart';
+
 
 class ApostolicYearScreen extends StatelessWidget {
   const ApostolicYearScreen({super.key});
+
+Future<void> _generateAndSharePDF(BuildContext context, List<Map<String, dynamic>> months) async {
+  try {
+    final pdf = pw.Document();
+    
+    // Load a Unicode-compatible font
+    final font = await PdfGoogleFonts.nunitoRegular();
+    final boldFont = await PdfGoogleFonts.nunitoBold();
+    
+    pdf.addPage(
+      pw.MultiPage(
+        build: (context) => [
+          for (var month in months)
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  '${month['month']} - ${month['title']}',
+                  style: pw.TextStyle(
+                    font: boldFont,
+                    fontSize: 18,
+                  ),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Text(
+                  month['description'],
+                  style: pw.TextStyle(font: font),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Text(
+                  'Atividades:',
+                  style: pw.TextStyle(font: font),
+                ),
+                for (var activity in month['activities'])
+                  pw.Text(
+                    '- $activity',  // Using hyphen instead of bullet point
+                    style: pw.TextStyle(font: font),
+                  ),
+                pw.SizedBox(height: 16),
+              ],
+            ),
+        ],
+      ),
+    );
+
+    final output = await getTemporaryDirectory();
+    final file = File('${output.path}/planejamento_apostolico.pdf');
+    await file.writeAsBytes(await pdf.save());
+
+    await Share.shareFiles(
+      [file.path],
+      text: 'Planejamento Ano Apostólico',
+    );
+
+  } catch (e) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao gerar PDF: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -266,18 +338,13 @@ class ApostolicYearScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // Implementar função para baixar/compartilhar planejamento
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Em breve: Download do planejamento anual'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-        },
-        icon: const Icon(Icons.download),
-        label: const Text('Baixar Planejamento'),
-      ),
+      onPressed: () async {
+        print('Iniciando geração do PDF...'); // Log for debugging
+        await _generateAndSharePDF(context, months);
+      },
+      icon: const Icon(Icons.download),
+      label: const Text('Baixar Planejamento'),
+    ),
     );
   }
 }

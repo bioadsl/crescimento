@@ -1,131 +1,225 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
+import '../services/api_service.dart';
 import '../widgets/spiritual_radar_chart.dart';
+import '../models/assessment.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  final ApiService _apiService = ApiService();
+  Map<AssessmentType, Assessment>? _cachedData;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    if (_isLoading) return;
+    setState(() => _isLoading = true);
+    await _fetchLatestResults();
+    setState(() => _isLoading = false);
+  }
+
+  Future<Map<AssessmentType, Assessment>> _fetchLatestResults() async {
+    try {
+      final data = await _apiService.fetchLatestAssessments();
+      print('Dados recebidos: ${data.length} avaliações');
+      
+      data.forEach((type, assessment) {
+        print('Tipo: ${assessment.typeName}');
+        print('Scores: ${assessment.scores}');
+        print('Data: ${assessment.createdAt}');
+      });
+      
+      _cachedData = data;
+      return data;
+    } catch (e) {
+      print('Erro detalhado ao buscar dados: $e');
+      rethrow;
+    }
+  }
+
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard Espiritual'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadData,
+          ),
+        ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                'Seu Progresso Espiritual',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+      body: RefreshIndicator(
+        onRefresh: _loadData,
+        child: FutureBuilder<Map<AssessmentType, Assessment>>(
+          future: _fetchLatestResults(),
+          builder: (context, snapshot) {
+            if (_isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (snapshot.hasError) {
+              return _buildErrorWidget(snapshot.error.toString());
+            }
+
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Nenhuma avaliação encontrada'),
+                    ElevatedButton(
+                      onPressed: _loadData,
+                      child: const Text('Carregar Dados'),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-            SpiritualRadarChart(
-              title: 'Disciplinas Espirituais',
-              scores: {
-                'Oração': 4.5,
-                'Leitura': 3.8,
-                'Jejum': 3.2,
-                'Meditação': 4.0,
-                'Adoração': 4.7,
-                'Comunhão': 3.9,
-                'Serviço': 4.2,
-                'Silêncio': 3.5,
-                'Generosidade': 4.1,
-              },
-              gradientColors: const [Colors.blue, Colors.purple],
-            ),
-            SpiritualRadarChart(
-              title: 'Cinco Ministérios',
-              scores: {
-                'Apostólico': 3.8,
-                'Profético': 4.2,
-                'Evangelístico': 3.5,
-                'Pastoral': 4.7,
-                'Ensino': 4.0,
-              },
-              gradientColors: const [Colors.orange, Colors.red],
-            ),
-            SpiritualRadarChart(
-              title: 'Frutos do Espírito',
-              scores: {
-                'Amor': 4.5,
-                'Alegria': 4.2,
-                'Paz': 3.8,
-                'Paciência': 3.5,
-                'Bondade': 4.0,
-                'Benignidade': 4.3,
-                'Fidelidade': 4.1,
-                'Mansidão': 3.7,
-                'Domínio Próprio': 3.9,
-              },
-              gradientColors: const [Colors.green, Colors.teal],
-            ),
-            SpiritualRadarChart(
-              title: 'Pilares',
-              scores: {
-                'Palavra': 4.2,
-                'Oração': 3.9,
-                'Comunhão': 4.1,
-                'Evangelismo': 3.7,
-                'Serviço': 4.0,
-                'Adoração': 4.5,
-              },
-              gradientColors: const [Colors.deepPurple, Colors.indigo],
-            ),
-            SpiritualRadarChart(
-              title: 'Níveis de Intimidade',
-              scores: {
-                'Motivação': 4.3,
-                'Envolvimento': 3.8,
-                'Intimidade': 4.0,
-                'Provações': 3.6,
-                'Relacionamento': 4.2,
-                'Coração': 4.1,
-                'Missão': 3.9,
-                'Compartilhar': 3.7,
-              },
-              gradientColors: const [Colors.pink, Colors.red],
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              );
+            }
+
+            final assessments = snapshot.data!;
+            return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
                 children: [
-                  _buildStatCard(
-                    'Média Geral',
-                    '4.1',
-                    Icons.trending_up,
-                    Colors.blue,
+                  const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      'Seu Progresso Espiritual',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  _buildStatCard(
-                    'Área + Forte',
-                    'Adoração',
-                    Icons.star,
-                    Colors.orange,
-                  ),
-                  _buildStatCard(
-                    'Área - Forte',
-                    'Jejum',
-                    Icons.fitness_center,
-                    Colors.purple,
-                  ),
+                
+                  ...AssessmentType.values.map((type) {
+                    final assessment = assessments[type];
+                    if (assessment == null || assessment.scores.isEmpty) {
+                      print('Avaliação vazia para tipo: $type');
+                      return const SizedBox.shrink();
+                    }
+                    
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SpiritualRadarChart(
+                        title: Assessment.typeNames[type] ?? type.toString(),
+                        scores: assessment.scores,
+                        gradientColors: _getGradientColors(type),
+                      ),
+                    );
+                  }).toList(),
+                  const SizedBox(height: 16),
+                  _buildStatCards(assessments),
                 ],
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Adicione aqui a navegação para a tela de avaliação
-        },
-        child: const Icon(Icons.add),
+    );
+  }
+
+  
+  Widget _buildErrorWidget(String error) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 48, color: Colors.red),
+          const SizedBox(height: 16),
+          Text(
+            'Erro ao carregar dados: $error',
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () => setState(() => _cachedData = null),
+            child: const Text('Tentar Novamente'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Color> _getGradientColors(AssessmentType type) {
+    switch (type) {
+      case AssessmentType.spiritualDisciplines:
+        return [Colors.blue, Colors.purple];
+      case AssessmentType.fiveMinistries:
+        return [Colors.orange, Colors.red];
+      case AssessmentType.fruitOfSpirit:
+        return [Colors.green, Colors.teal];
+      case AssessmentType.pillars:
+        return [Colors.deepPurple, Colors.indigo];
+      case AssessmentType.intimacyLevel:
+        return [Colors.pink, Colors.red];
+      case AssessmentType.spiritualGifts:
+        return [Colors.amber, Colors.deepOrange];
+    }
+  }
+
+  Widget _buildStatCards(Map<AssessmentType, Assessment> assessments) {
+    double overallAverage = 0;
+    String strongestArea = '';
+    double strongestScore = 0;
+    String weakestArea = '';
+    double weakestScore = double.infinity;
+    int totalAreas = 0;
+
+    assessments.forEach((type, assessment) {
+      assessment.scores.forEach((area, score) {
+        overallAverage += score;
+        totalAreas++;
+
+        if (score > strongestScore) {
+          strongestScore = score;
+          strongestArea = '$area (${Assessment.typeNames[type]})';
+        }
+
+        if (score < weakestScore) {
+          weakestScore = score;
+          weakestArea = '$area (${Assessment.typeNames[type]})';
+        }
+      });
+    });
+
+    overallAverage = totalAreas > 0 ? overallAverage / totalAreas : 0;
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildStatCard(
+            'Média Geral',
+            overallAverage.toStringAsFixed(1),
+            Icons.trending_up,
+            Colors.blue,
+          ),
+          _buildStatCard(
+            'Área + Forte',
+            strongestArea,
+            Icons.star,
+            Colors.orange,
+          ),
+          _buildStatCard(
+            'Área - Forte',
+            weakestArea,
+            Icons.fitness_center,
+            Colors.purple,
+          ),
+        ],
       ),
     );
   }

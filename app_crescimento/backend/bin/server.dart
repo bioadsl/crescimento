@@ -156,7 +156,42 @@ class ApiService {
     }
   }
  
+  Future<Response> getLatestFiveMinistries(Request request) async {
+    MySqlConnection? conn;
+    try {
+      conn = await MySqlConnection.connect(dbSettings);
 
+      final results = await conn.query('SELECT * FROM five_ministries_results ORDER BY created_at DESC LIMIT 1');
+
+      final List<Map<String, dynamic>> data = results
+          .map((result) => {
+                'id': result['id'],
+                'user_id': result['user_id'],
+                'apostolic': result['apostolic'],
+                'prophetic': result['prophetic'],
+                'evangelistic': result['evangelistic'],
+                'pastoral': result['pastoral'],
+                'teaching': result['teaching'],
+                'created_at': result['created_at'].toString(),
+              })
+          .toList();
+
+      return Response.ok(jsonEncode(data),
+          headers: {'Content-Type': 'application/json'});
+    } on MySqlException catch (e) {
+      print('MySqlException: ${e.message}');
+      return Response.internalServerError(
+          body: jsonEncode({'error': e.message}),
+          headers: {'Content-Type': 'application/json'});
+    } catch (e) {
+      print('Exception: $e');
+      return Response.internalServerError(
+          body: jsonEncode({'error': 'Failed to fetch results'}),
+          headers: {'Content-Type': 'application/json'});
+    } finally {
+      await conn?.close();
+    }
+  }
 
   Future<Response> insertFruitOfTheSpiritResult(Request request) async {
     MySqlConnection? conn;
@@ -203,6 +238,47 @@ class ApiService {
       conn = await MySqlConnection.connect(dbSettings);
 
       final results = await conn.query('SELECT * FROM fruit_of_the_spirit_results');
+
+      final List<Map<String, dynamic>> data = results
+          .map((result) => {
+                'id': result['id'],
+                'user_id': result['user_id'],
+                'love': result['love'],
+                'joy': result['joy'],
+                'peace': result['peace'],
+                'patience': result['patience'],
+                'kindness': result['kindness'],
+                'goodness': result['goodness'],
+                'faithfulness': result['faithfulness'],
+                'gentleness': result['gentleness'],
+                'self_control': result['self_control'],
+                'created_at': result['created_at'].toString(),
+              })
+          .toList();
+
+      return Response.ok(jsonEncode(data),
+          headers: {'Content-Type': 'application/json'});
+    } on MySqlException catch (e) {
+      print('MySqlException: ${e.message}');
+      return Response.internalServerError(
+          body: jsonEncode({'error': e.message}),
+          headers: {'Content-Type': 'application/json'});
+    } catch (e) {
+      print('Exception: $e');
+      return Response.internalServerError(
+          body: jsonEncode({'error': 'Failed to fetch results'}),
+          headers: {'Content-Type': 'application/json'});
+    } finally {
+      await conn?.close();
+    }
+  }
+
+  Future<Response> getLatestFruitOfTheSpirit(Request request) async {
+    MySqlConnection? conn;
+    try {
+      conn = await MySqlConnection.connect(dbSettings);
+
+      final results = await conn.query('SELECT * FROM fruit_of_the_spirit_results ORDER BY created_at DESC LIMIT 1');
 
       final List<Map<String, dynamic>> data = results
           .map((result) => {
@@ -318,6 +394,46 @@ class ApiService {
     }
   }
 
+  Future<Response> getLatestIntimacyLevel(Request request) async {
+    MySqlConnection? conn;
+    try {
+      conn = await MySqlConnection.connect(dbSettings);
+
+      final results = await conn.query('SELECT * FROM intimacy_level_results ORDER BY created_at DESC LIMIT 1');
+
+      final List<Map<String, dynamic>> data = results
+          .map((result) => {
+                'id': result['id'],
+                'user_id': result['user_id'],
+                'mission': result['mission'],
+                'sharing': result['sharing'],
+                'prayer': result['prayer'],
+                'bible': result['bible'],
+                'challenges': result['challenges'],
+                'support': result['support'],
+                'relationship': result['relationship'],
+                'heart': result['heart'],
+                'total_score': result['total_score'],
+                'created_at': result['created_at'].toString(),
+              })
+          .toList();
+
+      return Response.ok(jsonEncode(data),
+          headers: {'Content-Type': 'application/json'});
+    } on MySqlException catch (e) {
+      print('MySqlException: ${e.message}');
+      return Response.internalServerError(
+          body: jsonEncode({'error': e.message}),
+          headers: {'Content-Type': 'application/json'});
+    } catch (e) {
+      print('Exception: $e');
+      return Response.internalServerError(
+          body: jsonEncode({'error': 'Failed to fetch results'}),
+          headers: {'Content-Type': 'application/json'});
+    } finally {
+      await conn?.close();
+    }
+  }
 
 // class ApiService {
 //   // Métodos anteriores...
@@ -367,6 +483,47 @@ class ApiService {
       conn = await MySqlConnection.connect(dbSettings);
 
       final results = await conn.query('SELECT * FROM spiritual_gifts_results');
+
+      final List<Map<String, dynamic>> data = results
+          .map((result) => {
+                'id': result['id'],
+                'user_id': result['user_id'],
+                'prophecy': result['prophecy'],
+                'discernment': result['discernment'],
+                'tongues': result['tongues'],
+                'interpretation': result['interpretation'],
+                'wisdom': result['wisdom'],
+                'knowledge': result['knowledge'],
+                'faith': result['faith'],
+                'healing': result['healing'],
+                'miracles': result['miracles'],
+                'created_at': result['created_at'].toString(),
+              })
+          .toList();
+
+      return Response.ok(jsonEncode(data),
+          headers: {'Content-Type': 'application/json'});
+    } on MySqlException catch (e) {
+      print('MySqlException: ${e.message}');
+      return Response.internalServerError(
+          body: jsonEncode({'error': e.message}),
+          headers: {'Content-Type': 'application/json'});
+    } catch (e) {
+      print('Exception: $e');
+      return Response.internalServerError(
+          body: jsonEncode({'error': 'Failed to fetch results'}),
+          headers: {'Content-Type': 'application/json'});
+    } finally {
+      await conn?.close();
+    }
+  }
+
+  Future<Response> getLatestSpiritualGifts(Request request) async {
+    MySqlConnection? conn;
+    try {
+      conn = await MySqlConnection.connect(dbSettings);
+
+      final results = await conn.query('SELECT * FROM spiritual_gifts_results ORDER BY created_at DESC LIMIT 1');
 
       final List<Map<String, dynamic>> data = results
           .map((result) => {
@@ -482,6 +639,49 @@ class ApiService {
     }
   }
 
+  
+ Future<Response> getLatestSpiritualDisciplines(Request request) async {
+    MySqlConnection? conn;
+    try {
+      conn = await MySqlConnection.connect(dbSettings);
+
+      final results = await conn.query('SELECT * FROM spiritual_disciplines_results ORDER BY created_at DESC LIMIT 1');
+
+      final List<Map<String, dynamic>> data = results
+          .map((result) => {
+                'id': result['id'],
+                'user_id': result['user_id'],
+                'prayer': result['prayer'],
+                'bibleReading': result['bibleReading'],
+                'fasting': result['fasting'],
+                'meditation': result['meditation'],
+                'worship': result['worship'],
+                'fellowship': result['fellowship'],
+                'service': result['service'],
+                'silence': result['silence'],
+                'generosity': result['generosity'],
+                'created_at': result['created_at'].toString(),
+              })
+          .toList();
+
+      return Response.ok(jsonEncode(data),
+          headers: {'Content-Type': 'application/json'});
+    } on MySqlException catch (e) {
+      print('MySqlException: ${e.message}');
+      return Response.internalServerError(
+          body: jsonEncode({'error': e.message}),
+          headers: {'Content-Type': 'application/json'});
+    } catch (e) {
+      print('Exception: $e');
+      return Response.internalServerError(
+          body: jsonEncode({'error': 'Failed to fetch results'}),
+          headers: {'Content-Type': 'application/json'});
+    } finally {
+      await conn?.close();
+    }
+  }
+
+
   Future<Response> insertPillarsResult(Request request) async {
     MySqlConnection? conn;
     try {
@@ -550,6 +750,45 @@ class ApiService {
       await conn?.close();
     }
   }
+
+  Future<Response> getLatestPillars(Request request) async {
+   MySqlConnection? conn;
+    try {
+      conn = await MySqlConnection.connect(dbSettings);
+
+      final results = await conn.query('SELECT * FROM pillars_results ORDER BY created_at DESC LIMIT 1');
+
+      final List<Map<String, dynamic>> data = results
+          .map((result) => {
+            'id': result['id'],
+            'user_id': result['user_id'],
+            'missions': result['missions'],
+            'teaching': result['teaching'],
+            'discipleship': result['discipleship'],
+            'worship': result['worship'],
+              })
+          .toList();
+
+      return Response.ok(jsonEncode(data),
+          headers: {'Content-Type': 'application/json'});
+    } on MySqlException catch (e) {
+      print('MySqlException: ${e.message}');
+      return Response.internalServerError(
+          body: jsonEncode({'error': e.message}),
+          headers: {'Content-Type': 'application/json'});
+    } catch (e) {
+      print('Exception: $e');
+      return Response.internalServerError(
+          body: jsonEncode({'error': 'Failed to fetch results'}),
+          headers: {'Content-Type': 'application/json'});
+    } finally {
+      await conn?.close();
+    }
+  }
+
+
+
+
 }
 
 // Middleware CORS (definido apenas uma vez)
@@ -582,47 +821,48 @@ void main() async {
   final apiService = ApiService();
   final router = Router();
 
-  // Rota para o registro de usuário
+  // Rota de usuário
   router.post('/users/register', apiService.registerUser);
-
-  // Rota para o login de usuário
   router.post('/users/login', apiService.loginUser);
 
   // Rota para inserir resultados dos 5 ministérios
   router.post('/five_ministries', apiService.insertFiveMinistriesResult);
-
-  // Rota para obter resultados dos 5 ministérios
   router.get('/five_ministries', apiService.getFiveMinistriesResults);
+
 
   // Rota para inserir resultados dos frutos do Espírito
   router.post('/fruit_of_the_spirit', apiService.insertFruitOfTheSpiritResult);
-
-  // Rota para obter resultados dos frutos do Espírito
   router.get('/fruit_of_the_spirit', apiService.getFruitOfTheSpiritResults);
+
 
   // Rota para inserir resultados dos níveis de intimidade
   router.post('/intimacy_level', apiService.insertIntimacyLevelResult);
-
-  // Rota para obter resultados dos níveis de intimidade
   router.get('/intimacy_level', apiService.getIntimacyLevelResults);
+
 
   // Rota para inserir resultados dos dons espirituais
   router.post('/spiritual_gifts', apiService.insertSpiritualGiftsResult);
-
-  // Rota para obter resultados dos dons espirituais
   router.get('/spiritual_gifts', apiService.getSpiritualGiftsResults);
+
 
   // Rota para inserir resultados das disciplinas espirituais
   router.post('/spiritual_disciplines', apiService.insertSpiritualDisciplinesResult);
-
-  // Rota para obter resultados das disciplinas espirituais
   router.get('/spiritual_disciplines', apiService.getSpiritualDisciplinesResults);
+ 
 
   // Rota para inserir resultados dos pilares
   router.post('/pillars', apiService.insertPillarsResult);
-
-  // Rota para obter resultados dos pilares
   router.get('/pillars', apiService.getPillarsResults);
+
+
+  // Update route paths to match Flutter app requests
+  router.get('/spiritual-disciplines/latest', apiService.getLatestSpiritualDisciplines);
+  router.get('/five-ministries/latest', apiService.getLatestFiveMinistries); 
+  router.get('/fruit-of-spirit/latest', apiService.getLatestFruitOfTheSpirit);
+  router.get('/pillars/latest', apiService.getLatestPillars);
+  router.get('/intimacy-level/latest', apiService.getLatestIntimacyLevel);
+  router.get('/spiritual-gifts/latest', apiService.getLatestSpiritualGifts);
+
 
   // Adiciona o middleware de CORS antes do logRequests() e do handler
   final handler = const Pipeline()

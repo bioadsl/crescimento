@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 23-Fev-2025 às 16:40
+-- Tempo de geração: 26-Jan-2025 às 15:23
 -- Versão do servidor: 10.4.22-MariaDB
 -- versão do PHP: 8.0.13
 
@@ -38,6 +38,14 @@ CREATE TABLE `five_ministries_results` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Extraindo dados da tabela `five_ministries_results`
+--
+
+INSERT INTO `five_ministries_results` (`id`, `user_id`, `apostolic`, `prophetic`, `evangelistic`, `pastoral`, `teaching`, `created_at`) VALUES
+(1, 1, 15, 15, 15, 20, 25, '2025-01-10 02:16:25'),
+(2, 1, 15, 15, 15, 20, 25, '2025-01-10 13:45:47'),
+(3, 1, 11, 23, 17, 23, 15, '2025-01-14 00:59:16');
 
 -- --------------------------------------------------------
 
@@ -61,6 +69,13 @@ CREATE TABLE `fruit_of_the_spirit_results` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Extraindo dados da tabela `fruit_of_the_spirit_results`
+--
+
+INSERT INTO `fruit_of_the_spirit_results` (`id`, `user_id`, `love`, `joy`, `peace`, `patience`, `kindness`, `goodness`, `faithfulness`, `gentleness`, `self_control`, `total_score`, `created_at`) VALUES
+(1, 1, 25, 25, 25, 20, 22, 22, 21, 19, 19, NULL, '2025-01-13 07:03:24'),
+(2, 1, 5, 10, 15, 10, 5, 20, 25, 20, 15, NULL, '2025-01-21 19:30:36');
 
 -- --------------------------------------------------------
 
@@ -87,6 +102,9 @@ CREATE TABLE `intimacy_level_results` (
 -- Extraindo dados da tabela `intimacy_level_results`
 --
 
+INSERT INTO `intimacy_level_results` (`id`, `user_id`, `mission`, `sharing`, `prayer`, `bible`, `challenges`, `support`, `relationship`, `heart`, `total_score`, `created_at`) VALUES
+(1, 1, 4, 2, 3, 3, 4, 4, 5, 5, 30, '2025-01-13 23:38:31');
+
 -- --------------------------------------------------------
 
 --
@@ -103,6 +121,12 @@ CREATE TABLE `pillars_results` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Extraindo dados da tabela `pillars_results`
+--
+
+INSERT INTO `pillars_results` (`id`, `user_id`, `missions`, `teaching`, `discipleship`, `worship`, `created_at`) VALUES
+(1, 1, 5, 5, 25, 10, '2025-01-17 01:42:56');
 
 -- --------------------------------------------------------
 
@@ -125,7 +149,16 @@ CREATE TABLE `spiritual_disciplines_results` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-- --------------------------------------------------------
+--
+-- Extraindo dados da tabela `spiritual_disciplines_results`
+--
+
+INSERT INTO `spiritual_disciplines_results` (`id`, `user_id`, `prayer`, `bibleReading`, `fasting`, `meditation`, `worship`, `fellowship`, `service`, `silence`, `generosity`, `created_at`) VALUES
+(1, 1, 5, 10, 15, 20, 14, 20, 22, 25, 20, '2025-01-25 15:13:35'),
+(2, 1, 5, 10, 15, 14, 18, 22, 23, 22, 19, '2025-01-25 18:10:49'),
+(3, 1, 5, 10, 15, 20, 14, 20, 22, 25, 20, '2025-01-26 03:04:04');
+
+-- --------------------------------------------------------
 
 --
 -- Estrutura da tabela `spiritual_gifts_results`
@@ -146,6 +179,13 @@ CREATE TABLE `spiritual_gifts_results` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Extraindo dados da tabela `spiritual_gifts_results`
+--
+
+INSERT INTO `spiritual_gifts_results` (`id`, `user_id`, `prophecy`, `discernment`, `tongues`, `interpretation`, `wisdom`, `knowledge`, `faith`, `healing`, `miracles`, `created_at`) VALUES
+(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2025-01-14 23:55:14'),
+(2, 2, 3, 3, 4, 4, 2, 2, 1, 1, 5, '2025-01-15 01:06:55');
 
 -- --------------------------------------------------------
 
@@ -159,6 +199,13 @@ CREATE TABLE `users` (
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`) VALUES
+(1, 'teste', 'teste@teste.com', 'teste');
 
 --
 -- Índices para tabelas despejadas
@@ -214,43 +261,43 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de tabela `five_ministries_results`
 --
 ALTER TABLE `five_ministries_results`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `fruit_of_the_spirit_results`
 --
 ALTER TABLE `fruit_of_the_spirit_results`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `intimacy_level_results`
 --
 ALTER TABLE `intimacy_level_results`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `pillars_results`
 --
 ALTER TABLE `pillars_results`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `spiritual_disciplines_results`
 --
 ALTER TABLE `spiritual_disciplines_results`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `spiritual_gifts_results`
 --
 ALTER TABLE `spiritual_gifts_results`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

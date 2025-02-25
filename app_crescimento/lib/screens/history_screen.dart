@@ -87,31 +87,73 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildSection(String title, List<Map<String, dynamic>> results, List<String> fields, {bool showMessage = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        ...results.map((result) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                title: Text('Usuário ${result['user_id']}'),
-                subtitle: Text(fields.map((field) => '$field: ${result[field]}').join(', ')),
-                trailing: Text(result['created_at'].toString()),
-              ),
-              if (showMessage && result.containsKey('total_score'))
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    _getIntimacyLevelMessage(result['total_score']),
-                    style: const TextStyle(fontStyle: FontStyle.italic),
-                  ),
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title, 
+              style: const TextStyle(
+                fontSize: 20, 
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              )
+            ),
+            const Divider(),
+            ...results.map((result) {
+              final date = DateTime.parse(result['created_at']);
+              final formattedDate = '${date.day}/${date.month}/${date.year}';
+              
+              return Card(
+                color: Colors.grey[50],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      title: Text(
+                        'Avaliação de ${formattedDate}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: fields.map((field) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2),
+                          child: Text(
+                            '${field.replaceAll('_', ' ').toUpperCase()}: ${result[field]}',
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        )).toList(),
+                      ),
+                    ),
+                    if (showMessage && result.containsKey('total_score'))
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            _getIntimacyLevelMessage(result['total_score']),
+                            style: const TextStyle(
+                              fontStyle: FontStyle.italic,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-            ],
-          );
-        }).toList(),
-      ],
+              );
+            }).toList(),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MissionItemScreen extends StatefulWidget {
+  const MissionItemScreen({super.key});
+
   @override
   _MissionItemScreenState createState() => _MissionItemScreenState();
 }
@@ -53,7 +55,7 @@ class _MissionItemScreenState extends State<MissionItemScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Missões'),
+        title: const Text('Missões'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -62,10 +64,10 @@ class _MissionItemScreenState extends State<MissionItemScreen> {
           child: ListView(
             children: [
               _buildRadioGroup('Missões', _missionItems, 'missionItems'),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _submitForm,
-                child: Text('Enviar'),
+                child: const Text('Enviar'),
               ),
             ],
           ),
