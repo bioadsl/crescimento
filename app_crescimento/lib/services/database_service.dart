@@ -2,12 +2,13 @@ import 'package:mysql1/mysql1.dart';
 
 class AuthService {
   final ConnectionSettings settings = ConnectionSettings(
-    host: 'localhost',
+    host: 'mysql.teleioscap.com.br',
     port: 3306,
-    user: 'root',
-    password: 'SUA_SENHA_AQUI',
-    db: 'crescimento',
+    user: 'teleioscap',
+    password: 'teleios2025',   
+    db: 'teleioscap',
   );
+
 
   Future<bool> register(String name, String email, String password) async {
     final conn = await MySqlConnection.connect(settings);

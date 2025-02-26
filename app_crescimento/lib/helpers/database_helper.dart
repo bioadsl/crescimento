@@ -15,14 +15,15 @@ class DatabaseHelper {
 
   Future<MySqlConnection> _initConnection() async {
     final settings = ConnectionSettings(
-      host: 'localhost', // Substitua pelo host do seu banco de dados
-      port: 3306,
-      user: 'root', // Substitua pelo usuário do seu banco de dados
-      password: 'SUA_SENHA_AQUI', // Substitua pela senha do seu banco de dados
-      db: 'crescimento', // Substitua pelo nome do seu banco de dados
+    host: 'mysql.teleioscap.com.br',
+    port: 3306,
+    user: 'teleioscap',
+    password: 'teleios2025',   
+    db: 'teleioscap', // Substitua pelo nome do seu banco de dados
     );
     return await MySqlConnection.connect(settings);
   }
+
 
   Future<void> createTables() async {
     final conn = await connection;

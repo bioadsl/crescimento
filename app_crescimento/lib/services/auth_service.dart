@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String baseUrl = 'http://localhost:8080';
+  final String baseUrl = 'http://mysql.teleioscap.com.br:3306';
 
   Future<bool> register(String name, String email, String password) async {
     final response = await http.post(

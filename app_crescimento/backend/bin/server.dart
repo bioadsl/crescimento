@@ -4,13 +4,13 @@ import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
 import 'package:mysql1/mysql1.dart';
 
-// Configurações do banco de dados
+// Configurações do banco de dados
 final dbSettings = ConnectionSettings(
-  host: 'localhost',
+  host: 'mysql.teleioscap.com.br',
   port: 3306,
-  user: 'root',
-  password: 'SUA_SENHA_AQUI', // Certifique-se de que a senha está correta
-  db: 'crescimento',
+  user: 'teleioscap',
+  password: 'teleios2025',   
+ db: 'teleioscap',
 );
 
 // Classe de serviço para APIs
@@ -871,6 +871,6 @@ void main() async {
       .addHandler(router.call);       // Roteamento
 
   // Servindo a API
-  await io.serve(handler, 'localhost', 8080);
-  print('Server running on http://localhost:8080');
+  await io.serve(handler, 'mysql.teleioscap.com.br', 3306);
+  print('Server running on http://mysql.teleioscap.com.br:3306');
 }
