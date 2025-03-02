@@ -6,11 +6,11 @@ import 'package:mysql1/mysql1.dart';
 
 // Configurações do banco de dados
 final dbSettings = ConnectionSettings(
-  host: 'mysql.teleioscap.com.br',
+  host: 'localhost', //mysql.teleioscap.com.br
   port: 3306,
-  user: 'teleioscap',
-  password: 'teleios2025',   
- db: 'teleioscap',
+  user: 'root', //teleioscap
+  password: 'SUA_SENHA_AQUI',  //teleios2025 
+  db: 'crescimento', //teleioscap
 );
 
 // Classe de serviço para APIs
@@ -871,6 +871,6 @@ void main() async {
       .addHandler(router.call);       // Roteamento
 
   // Servindo a API
-  await io.serve(handler, 'mysql.teleioscap.com.br', 3306);
-  print('Server running on http://mysql.teleioscap.com.br:3306');
+  await io.serve(handler, 'http://localhost:3306', 3306);
+  print('Server running on http://localhost:3306'); 
 }

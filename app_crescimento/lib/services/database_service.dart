@@ -2,11 +2,11 @@ import 'package:mysql1/mysql1.dart';
 
 class AuthService {
   final ConnectionSettings settings = ConnectionSettings(
-    host: 'mysql.teleioscap.com.br',
-    port: 3306,
-    user: 'teleioscap',
-    password: 'teleios2025',   
-    db: 'teleioscap',
+  host: 'localhost', //mysql.teleioscap.com.br
+  port: 3306,
+  user: 'root', //teleioscap
+  password: 'SUA_SENHA_AQUI',  //teleios2025 
+  db: 'crescimento', //teleioscap
   );
 
 

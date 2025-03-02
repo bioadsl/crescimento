@@ -4,7 +4,7 @@ import 'dart:convert';
 import '../models/assessment.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://mysql.teleioscap.com.br:3306';
+  static const String baseUrl = 'http://localhost:3306'; //http://mysql.teleioscap.com.br:3306
 
   Future<Map<AssessmentType, Assessment>> fetchLatestAssessments() async {
     try {
